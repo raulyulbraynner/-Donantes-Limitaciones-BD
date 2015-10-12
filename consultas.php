@@ -37,6 +37,31 @@ if(isset($_GET['callback']) && isset($_GET['consulta']))
 		}
 	}
 
+	// Agregar donaciones
+	if($consulta == 'agregarDonacionFundacion' && isset($_GET['data'])){
+
+		$misParamentros = json_decode($_GET['data']);
+
+		$implemento = $misParamentros->{'implemento'};
+		$estado = $misParamentros->{'estado'};
+		$cantidad = $misParamentros->{'cantidad'};
+		$idDonante = $misParamentros->{'idDonante'};
+
+		mysql_query('SET CHARACTER SET utf8');
+		$sql = "INSERT INTO donaciones (implemento, cantidad, estados_donaciones_id, usuarios_id_donante, usuarios_id_beneficiario, estado_implemento)
+		VALUES ('$implemento','$cantidad',1,'$idDonante',1,'$estado')";
+
+		$resultset = mysql_query($sql,$connection) or die(mysql_error());
+		if ($resultset) {
+			$obj['resultado'] = '1';
+			echo $callback.'(' . json_encode($obj) . ')';
+		}
+		else{
+			$obj['resultado'] = '0';
+			echo $callback.'(' . json_encode($obj) . ')';
+		}
+	}
+
 	if($consulta == 'agregarBeneficiario' && isset($_GET['data'])){
 
 		$misParamentros = json_decode($_GET['data']);
@@ -53,31 +78,6 @@ if(isset($_GET['callback']) && isset($_GET['consulta']))
 		VALUES ('$documento', '$documento', '$nombres', '$apellidos', '$telefono', '$correo', '', 2, '$documento', null, '$implemento')";
 
 		$resultset = mysql_query($sql,$connection);
-		if ($resultset) {
-			$obj['resultado'] = '1';
-			echo $callback.'(' . json_encode($obj) . ')';
-		}
-		else{
-			$obj['resultado'] = '0';
-			echo $callback.'(' . json_encode($obj) . ')';
-		}
-	}
-
-	// Agregar donaciones
-	if($consulta == 'agregarDonacionFundacion' && isset($_GET['data'])){
-
-		$misParamentros = json_decode($_GET['data']);
-
-		$implemento = $misParamentros->{'implemento'};
-		$estado = $misParamentros->{'estado'};
-		$cantidad = $misParamentros->{'cantidad'};
-		$idDonante = $misParamentros->{'idDonante'};
-
-		mysql_query('SET CHARACTER SET utf8');
-		$sql = "INSERT INTO donaciones (implemento, cantidad, estados_donaciones_id, usuarios_id_donante, usuarios_id_beneficiario, estado_implemento)
-		VALUES ('$implemento','$cantidad',1,'$idDonante',1,'$estado')";
-
-		$resultset = mysql_query($sql,$connection) or die(mysql_error());
 		if ($resultset) {
 			$obj['resultado'] = '1';
 			echo $callback.'(' . json_encode($obj) . ')';
